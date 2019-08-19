@@ -61,8 +61,12 @@ import './index.css';
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length-1];
         const squares = current.squares.slice();
-        if (calculateWinner(squares) || squares[i]) {
+        if (squares[i]) {
             return;
+        }
+        const winner = calculateWinner(squares);
+        if (winner) {
+          return;
         }
         squares[i] = this.nextPlayer();
         this.setState({
@@ -99,7 +103,7 @@ import './index.css';
 
       let status;
       if (winner) {
-          status = 'Winner: ' + winner;
+          status = 'Winner: ' + current.squares[winner[0]];
       } else {
         status = 'Next player: ' + this.nextPlayer();
       }
@@ -135,7 +139,7 @@ import './index.css';
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
+        return lines[i];
       }
     }
     return null;
