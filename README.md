@@ -1,4 +1,7 @@
+## Intro
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Further implementation was added to add the improvements listed at the bottom of the tutorial
 
 ## Available Scripts
 
