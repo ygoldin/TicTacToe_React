@@ -4,7 +4,9 @@ import './index.css';
 
     function Square(props) {
         return (
-            <button className="square" onClick={props.onClick}>
+            <button
+              className={props.highlight ? "square-highlighted" : "square-normal"}
+              onClick={props.onClick}>
                 {props.value}
             </button>
         );
@@ -15,6 +17,8 @@ import './index.css';
             return <Square
                 value={this.props.squares[i]}
                 onClick={() => this.props.onClick(i)}
+                highlight={this.props.winningSpots &&
+                    this.props.winningSpots.includes(i)}
             />;
         }
 
@@ -48,6 +52,7 @@ import './index.css';
               history: [{
                   squares: Array(9).fill(null),
               }],
+              winningSpots: null,
               stepNumber: 0,
               xIsNext: true,
           }
@@ -61,11 +66,7 @@ import './index.css';
           const history = this.state.history.slice(0, this.state.stepNumber + 1);
           const current = history[history.length-1];
           const squares = current.squares.slice();
-          if (squares[i]) {
-              return;
-          }
-          const winner = calculateWinner(squares);
-          if (winner) {
+          if (squares[i] || this.state.winningSpots) {
               return;
           }
           squares[i] = this.nextPlayer();
@@ -76,19 +77,28 @@ import './index.css';
               stepNumber: history.length,
               xIsNext: !this.state.xIsNext,
           });
+          const winner = calculateWinner(squares);
+          if (winner) {
+              this.setState({
+                  winningSpots: winner,
+              })
+          }
       }
 
     jumpTo(step) {
-        this.setState({
-            stepNumber: step,
-            xIsNext: (step%2) === 0,
-        })
+        if (step < this.state.stepNumber) {
+            this.setState({
+              stepNumber: step,
+              xIsNext: (step%2) === 0,
+              winningSpots: null,
+            });
+        }
+        
     }
 
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
-        const winner = calculateWinner(current.squares);
 
         const moves = history.map((step, move) => {
             const desc = move ?
@@ -102,8 +112,8 @@ import './index.css';
         })
 
         let status;
-        if (winner) {
-            status = 'Winner: ' + current.squares[winner[0]];
+        if (this.state.winningSpots) {
+            status = 'Winner: ' + current.squares[this.state.winningSpots[0]];
         } else {
             status = 'Next player: ' + this.nextPlayer();
         }
@@ -114,6 +124,7 @@ import './index.css';
                     <Board 
                         squares={current.squares}
                         onClick={(i) => this.handleClick(i)}
+                        winningSpots={this.winningSpots}
                     />
                 </div>
                 <div className="game-info">
