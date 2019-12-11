@@ -12,5 +12,5 @@ else()
     add_compile_options(-Wall)
 endif()
 
-add_subdirectory(src)
+add_subdirectory(lib)
 add_subdirectory(googletest)
