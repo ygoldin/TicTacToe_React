@@ -1,10 +1,10 @@
 # Created by Yael Goldin
 
-add_library(TicTacToeModule STATIC
+add_library(lib STATIC
     src/Spot.cpp
     include/Spot.h
     include/SpotStatus.h)
 
-target_include_directories(TicTacToeModule
+target_include_directories(lib
     PUBLIC
         include)
